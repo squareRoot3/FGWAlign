@@ -134,6 +134,6 @@ We use the dataset and source code of [GABoost](https://github.com/oceaneLIU/GAB
 python test_align.py --dataset douban
 python test_align.py --dataset movie
 # Run the megadiff_changes dataset
-unzip GABoost/dataset/megadiff_changes.zip
+unzip GABoost/dataset/megadiff_changes.zip -d GABoost/dataset/
 python test_align_batch.py
 ```
