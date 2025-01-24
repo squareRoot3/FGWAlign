@@ -126,3 +126,11 @@ for dataset in AIDS Linux IMDB; do
     done
 done
 ```
+
+### Graph Alignment Experiments
+
+```bash
+python test_align.py --dataset douban
+python test_align.py --dataset movie
+python test_align_batch.py  # For the megadiff_changes dataset.
+```

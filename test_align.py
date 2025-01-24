@@ -12,7 +12,7 @@ from src.FGWAlign import *
 from utils import *
 from GABoost.algorithm.SCMN import SCMN
 from GABoost.metrics import *
-from GABoost.graphloader import *
+from graphloader import *
 
 def setup_environment(cuda_device: str):
     """

@@ -15,7 +15,7 @@ from src.FGWAlign import *
 from utils import *
 from GABoost.algorithm.SCMN import SCMN
 from GABoost.metrics import *
-from GABoost.graphloader import * 
+from graphloader import * 
 
 def setup_environment(cuda_device: str):
     """
@@ -70,7 +70,7 @@ def parse_arguments():
         '--dataset',
         type=str,
         default='megadiff_changes',
-        choices=['megadiff_changes', 'movie', 'douban'],  # Add other dataset options as needed
+        choices=['megadiff_changes'],
         help='Name of the dataset to use (default: megadiff_changes)'
     )
     parser.add_argument(
