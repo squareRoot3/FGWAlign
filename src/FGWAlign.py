@@ -115,6 +115,7 @@ def fusedGW_solver(
     p_t: Optional[torch.Tensor] = None,
     trans0: Optional[torch.Tensor] = None,
     error_bound: float = 1e-5,
+    alpha: float = 1,
     sparse: bool = False,
     light: bool = False
 ) -> torch.Tensor:
@@ -137,6 +138,8 @@ def fusedGW_solver(
         Initial transport plan, by default None.
     error_bound : float, optional
         Convergence threshold, by default 1e-5.
+    alpha : float, optional
+        Balance parameter for the label cost, by default 1.
     sparse : bool, optional
         Whether to use sparse matrices, by default False.
     light : bool, optional
@@ -165,8 +168,6 @@ def fusedGW_solver(
     if light:
         outer_iter, inner_iter, beta = 20, 1, 0.1
 
-    alpha = 1 / n1
-
     if not sparse:
         cost_s2 = 1 - cost_s
         cost_t2 = 1 - cost_t
@@ -182,7 +183,7 @@ def fusedGW_solver(
         cost = cost.T
 
         if cost_st is not None:
-            cost += alpha * cost_st
+            cost += (alpha / n1) * cost_st
 
         kernel = torch.exp(-cost / beta) * trans0
 
@@ -324,7 +325,7 @@ def FGWAlign(
     g2_labels: Optional[torch.Tensor] = None,
     patience: int = 15,
     topk: int = 5,
-    reg: float = 0.,
+    alpha: float = 1,
     sparse: bool = False,
     light: bool = False,
     device: str = 'cpu'
@@ -344,10 +345,10 @@ def FGWAlign(
         Node labels in the second graph, by default None.
     patience : int, optional
         Number of trials without improvement before stopping, by default 15.
-    reg : float, optional
-        Regularization parameter, by default 0.0.
     topk : int, optional
         Number of top assignments to consider, by default 5.
+    alpha : float, optional
+        Balance parameter for the label cost, by default 1.
     sparse : bool, optional
         Whether to use sparse matrices for the FGW solver, by default False.
     device : str, optional
@@ -386,9 +387,14 @@ def FGWAlign(
     while i < trial_num:
         init_guess = None
         if i > 0:
-            init_guess_np = ot.sinkhorn(p.cpu().numpy(), q.cpu().numpy(),
-                                        torch.randn(n, n, device=device).cpu().numpy(),
-                                        reg=1, numItermax=20)
+            if n < 1000:
+                init_guess_np = ot.sinkhorn(p.cpu().numpy(), q.cpu().numpy(),
+                                            torch.randn(n, n, device=device).cpu().numpy(),
+                                            reg=1, numItermax=20)
+            else:
+                init_guess_np = ot.sinkhorn(p.cpu().numpy(), q.cpu().numpy(),
+                                            1 - optimal_align_mat.to_dense().cpu().numpy() + torch.randn(n, n, device=device).cpu().numpy(),
+                                            reg=1, numItermax=10)
             init_guess = torch.tensor(init_guess_np, dtype=torch.float32, device=device)
 
         pi = fusedGW_solver(
@@ -397,7 +403,8 @@ def FGWAlign(
             cost_st=label_cost,
             trans0=init_guess,
             sparse=sparse,
-            light=light
+            light=light,
+            alpha=alpha
         )
 
         for j in range(topk):
