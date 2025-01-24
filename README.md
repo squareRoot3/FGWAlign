@@ -5,47 +5,47 @@ This is the official implementation of the following manuscript:
 
 ## Directory Structure
 
-```
+```clean
 .
-├── dataset/                   # All datasets
+├── dataset/                   # Datasets
 │   ├── AIDS/                  # AIDS and AIDS700 datasets
-│   ├── IMDB/                  # IMDB dataset  
+│   ├── IMDB/                  # IMDB dataset 
 │   ├── Linux/                 # Linux dataset
-│   └── generate_synthetic_dataset.py  # Code for synthetic dataset generation
-├── results/                   # Experimental results
+│   └── generate_synthetic_dataset.py  # Synthetic data generator
 ├── src/                       # Source code
-    ├── baselines.py           # Assignment-based and search-based GED baselines
-    ├── FGWAlign.py               # Implementation of the proposed FGWAlign method
-    ├── test_multirel.py       # Evaluation code for multi-relational graphs
-    ├── test_real.py           # Evaluation code for real-world graphs
-    └── test_synthetic.py      # Evaluation code for synthetic graphs
-├── readme.md
-└── tutorial.ipynb
+│   ├── baselines.py          # Assignment and search-based GED baselines
+│   ├── FGWAlign.py           # Core FGWAlign implementation
+│   ├── test_multirel.py      # Multi-relational graph evaluation
+│   ├── test_real.py          # Real-world graph evaluation  
+│   └── test_synthetic.py     # Synthetic graph evaluation
+├── test_align_batch.py       # Batch alignment for megadiff_changes
+├── test_align.py             # Other alignment experiments
+└── tutorial.ipynb            # Getting started tutorial
 ```
 
 ## Setup
 
 ```bash
-# Create and activate a python virtual environment
+# Create virtual environment
 pip install --upgrade pip
 pip install virtualenv
 virtualenv FGWAlign
 source FGWAlign/bin/activate
 
-# # For anaconda user
-# conda create -n FGWAlign
-# conda activate FGWAlign
-# conda install pip
+# For conda users
+conda create -n FGWAlign
+conda activate FGWAlign
+conda install pip
 
 # Install dependencies
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  # change cu118 to your CUDA version (cu121/cpu)
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  # Change cu118 to your CUDA version
 pip install pygmtools pot networkx scipy memory_profiler munkres
 ```
 
 ## Datasets
 
 - Real-world datasets are included in the `dataset` folder, sourced from [GEDGNN](https://github.com/ChengzhiPiao/GEDGNN) and [TagSim](https://github.com/jiyangbai/TaGSim).
-- Generate synthetic datasets:
+- Generate the synthetic dataset in our manuscript:
   ```bash
   python dataset/generate_synthetic_dataset.py
   ```
@@ -54,7 +54,7 @@ pip install pygmtools pot networkx scipy memory_profiler munkres
 
 ### Getting Started
 
-We recommend starting with `tutorial.ipynb` which demonstrates FGWAlign on the example in Figures 1 and 2 from our manuscript.
+We recommend starting with `tutorial.ipynb`, which demonstrates FGWAlign on the example in our manuscript.
 
 ### FGWAlign Variants on Real-World Datasets
 
@@ -129,8 +129,11 @@ done
 
 ### Graph Alignment Experiments
 
+We use the dataset and source code of [GABoost](https://github.com/oceaneLIU/GABoost/) for the evaluation.
 ```bash
 python test_align.py --dataset douban
 python test_align.py --dataset movie
-python test_align_batch.py  # For the megadiff_changes dataset.
+# Run the megadiff_changes dataset
+unzip GABoost/dataset/megadiff_changes.zip
+python test_align_batch.py
 ```
