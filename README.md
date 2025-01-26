@@ -12,15 +12,16 @@ This is the official implementation of the following manuscript:
 │   ├── IMDB/                  # IMDB dataset 
 │   ├── Linux/                 # Linux dataset
 │   └── generate_synthetic_dataset.py  # Synthetic data generator
+├── GABoost                    # Source code of GABoost
 ├── src/                       # Source code
-│   ├── baselines.py          # Assignment and search-based GED baselines
-│   ├── FGWAlign.py           # Core FGWAlign implementation
-│   ├── test_multirel.py      # Multi-relational graph evaluation
-│   ├── test_real.py          # Real-world graph evaluation  
-│   └── test_synthetic.py     # Synthetic graph evaluation
-├── test_align_batch.py       # Batch alignment for megadiff_changes
-├── test_align.py             # Other alignment experiments
-└── tutorial.ipynb            # Getting started tutorial
+│   ├── baselines.py           # Assignment and search-based GED baselines
+│   ├── FGWAlign.py            # Core FGWAlign implementation
+│   ├── test_multirel.py       # Multi-relational graph evaluation
+│   ├── test_real.py           # Real-world graph evaluation  
+│   └── test_synthetic.py      # Synthetic graph evaluation
+├── test_align_batch.py        # Batch alignment for megadiff_changes
+├── test_align.py              # Other alignment experiments
+└── tutorial.ipynb             # Getting started tutorial
 ```
 
 ## Setup
@@ -135,5 +136,5 @@ python test_align.py --dataset douban
 python test_align.py --dataset movie
 # Run the megadiff_changes dataset
 unzip GABoost/dataset/megadiff_changes.zip -d GABoost/dataset/
-python test_align_batch.py
+python test_align_batch.py --run_GABoost
 ```

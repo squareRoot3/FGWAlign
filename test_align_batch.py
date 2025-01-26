@@ -63,7 +63,7 @@ def print_metrics(title: str, ACC: float, MAP: float, EC: float, ICS: float):
 
 def parse_arguments():
     """
-    Parses command-line arguments for CUDA device, dataset, and run_final option.
+    Parses command-line arguments for CUDA device, dataset, and run_GABoost option.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -80,7 +80,7 @@ def parse_arguments():
         help='CUDA device ID to use (default: 0)'
     )
     parser.add_argument(
-        '--run_final',
+        '--run_GABoost',
         action='store_true',
         help='Flag to indicate whether to run the final alignment using GABoost (default: False)'
     )
@@ -103,7 +103,7 @@ def get_graph_pairs(dataset: str) -> List[Tuple[str, str]]:
         # For other datasets, assume single graph pair
         return [('', '')]
 
-def process_graph_pair(dataset: str, changeline: str, sample: str, device: torch.device, run_final: bool):
+def process_graph_pair(dataset: str, changeline: str, sample: str, device: torch.device, run_GABoost: bool):
     """
     Processes a single graph pair: loads graphs, performs alignment, computes metrics.
     Returns the metrics as a tuple.
@@ -167,7 +167,7 @@ def process_graph_pair(dataset: str, changeline: str, sample: str, device: torch
     ACC, MAP, EC, ICS = compute_metrics(initial_alignment, gt, graph0, graph1)
     print_metrics(f"Initial ({changeline}_{sample})", ACC, MAP, EC, ICS)
 
-    if run_final:
+    if run_GABoost:
         # Initialize and run GABoost algorithm
         alg = GABoost(graph0, graph1, initial_alignment)
         output_alignment = alg.get_matching(64)
@@ -186,7 +186,7 @@ def main():
     args = parse_arguments()
     dataset = args.dataset
     cuda_device = args.cuda_device
-    run_final = args.run_final
+    run_GABoost = args.run_GABoost
 
     # Setup environment
     setup_environment(cuda_device=cuda_device)
@@ -212,14 +212,14 @@ def main():
     for changeline, sample in graph_pairs:
         pair_name = f"{changeline}_{sample}" if dataset == 'megadiff_changes' else "single_pair"
         print(f"Processing graph pair: {pair_name}" if dataset == 'megadiff_changes' else "Processing graph pair")
-        metrics = process_graph_pair(dataset, changeline, sample, device, run_final)
+        metrics = process_graph_pair(dataset, changeline, sample, device, run_GABoost)
         if dataset == 'megadiff_changes':
             ACC_initial, MAP_initial, EC_initial, ICS_initial, ACC_final, MAP_final, EC_final, ICS_final = metrics
             ACC_initial_list.append(ACC_initial)
             MAP_initial_list.append(MAP_initial)
             EC_initial_list.append(EC_initial)
             ICS_initial_list.append(ICS_initial)
-            if run_final and ACC_final is not None:
+            if run_GABoost and ACC_final is not None:
                 ACC_final_list.append(ACC_final)
                 MAP_final_list.append(MAP_final)
                 EC_final_list.append(EC_final)
@@ -243,7 +243,7 @@ def main():
         print(f'Average EC  = {avg_EC_initial:.4f}')
         print(f'Average ICS = {avg_ICS_initial:.4f}\n')
 
-        if run_final and ACC_final_list:
+        if run_GABoost and ACC_final_list:
             avg_ACC_final = sum(ACC_final_list) / len(ACC_final_list)
             avg_MAP_final = sum(MAP_final_list) / len(MAP_final_list)
             avg_EC_final = sum(EC_final_list) / len(EC_final_list)
