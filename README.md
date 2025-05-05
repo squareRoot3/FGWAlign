@@ -1,3 +1,8 @@
+# To reviewers and the meta reviewer:
+
+I accidentally uploaded the incorrect revision file in the CMT system. I contacted the chairs regarding this issue, but they were unable to assist with uploading a new version as the deadline has already passed. I understand this situation cannot be remedied at this point, but if you are still interested in viewing my responses and revisions, please find them [here](https://github.com/squareRoot3/FGWAlign/blob/main/VLDB25_FGWAlign_Revision_ID2442.pdf).
+
+
 # FGWAlign
 
 This is the official implementation of the following manuscript:
