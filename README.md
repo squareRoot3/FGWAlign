@@ -12,16 +12,18 @@ This is the official implementation of the following manuscript:
 │   ├── IMDB/                  # IMDB dataset 
 │   ├── Linux/                 # Linux dataset
 │   └── generate_synthetic_dataset.py  # Synthetic data generator
-├── GABoost                    # Source code of GABoost
-├── src/                       # Source code
+├── GABoost                    # Source code of [GABoost](https://github.com/oceaneLIU/GABoost/)
+├── src/                       # Source code of our proposed FGWAlign
 │   ├── baselines.py           # Assignment and search-based GED baselines
 │   ├── FGWAlign.py            # Core FGWAlign implementation
-│   ├── test_multirel.py       # Multi-relational graph evaluation
-│   ├── test_real.py           # Real-world graph evaluation  
-│   └── test_synthetic.py      # Synthetic graph evaluation
+│   ├── test_multirel.py       # GED computation experiments on multi-relational graphs
+│   ├── test_real.py           # GED computation experiments on real-world graphs  
+│   └── test_synthetic.py      # GED computation experiments on synthetic graphs
+├── anomaly_detection.py       # Graph-level anomaly detection experiments following [SIGNET](https://github.com/yixinliu233/signet)
 ├── test_align_batch.py        # Batch alignment for megadiff_changes
 ├── test_align.py              # Other alignment experiments
-└── tutorial.ipynb             # Getting started tutorial
+├── tutorial.ipynb             # Getting started tutorial
+└── utils.py                   # 
 ```
 
 ## Setup
@@ -110,7 +112,6 @@ python src/test_multirel.py --method FGWAlign
 
 2. Random Exploration Patience (T)
 ```bash
-# For each dataset (AIDS/Linux/IMDB), test different patience values
 for dataset in AIDS Linux IMDB; do
     for patience in 1 2 5 10 20; do
         python src/test_real.py --dataset $dataset --patience $patience
@@ -120,7 +121,6 @@ done
 
 3. Diverse Projection Candidates (K)
 ```bash
-# For each dataset (AIDS/Linux/IMDB), test different topk values
 for dataset in AIDS Linux IMDB; do
     for topk in 1 2 5 10 20; do
         python src/test_real.py --dataset AIDS --topk $topk
@@ -128,13 +128,21 @@ for dataset in AIDS Linux IMDB; do
 done
 ```
 
-### Graph Alignment Experiments
+### Downstream Application I: Graph Alignment
 
-We use the dataset and source code of [GABoost](https://github.com/oceaneLIU/GABoost/) for the evaluation.
+We exactly follow the settings in [GABoost](https://github.com/oceaneLIU/GABoost/) for the evaluation. The datasets include Douban, Movie, and Megadiff_changes, which consist of pairs of heterogeneous graphs with their ground-truth alignments.
 ```bash
 python test_align.py --dataset douban
 python test_align.py --dataset movie
 # Run the megadiff_changes dataset
 unzip GABoost/dataset/megadiff_changes.zip -d GABoost/dataset/
 python test_align_batch.py --run_GABoost
+```
+
+### Downstream Application II: Graph-level Anomaly Detection
+
+We exactly follow the settings in [SIGNET](https://github.com/yixinliu233/signet) for the evaluation. The task aims to recognize anomalous graphs from a set of graphs by predicting an anomaly score for each graph sample. We evaluate FGWAlign on six benchmark datasets: PROTEINS-F, ENZYMES, AIDS, BZR, DD, and NCI1.
+```bash
+python anomaly_detection.py --dataset PROTEINS  
+# the dataset can be replaced by ENZYMES/AIDS/BZR/DD/NCI1
 ```

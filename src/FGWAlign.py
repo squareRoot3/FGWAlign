@@ -412,7 +412,7 @@ def FGWAlign(
 
             if (trans > (0.5 / n)).sum() < n:
                 flag += 1
-                if sparse:
+                if sparse and n > 1000:
                     # Greedy search of pi
                     trans, _ = greedy_assignment(pi.cpu().tolist(), 1 / (n * np.log(n)))
                     trans = trans.to(device)
