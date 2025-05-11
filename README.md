@@ -3,27 +3,29 @@
 This is the official implementation of the following manuscript:
 > Fused Gromov-Wasserstein Alignment for Graph Edit Distance Computation and Beyond
 
+For a detailed description of the experimental setup for downstream applications in FGWAlign, please refer to the [Appendix](https://github.com/squareRoot3/FGWAlign/blob/main/appendix.pdf).
+
 ## Directory Structure
 
 ```clean
 .
-├── dataset/                   # Datasets
-│   ├── AIDS/                  # AIDS and AIDS700 datasets
-│   ├── IMDB/                  # IMDB dataset 
-│   ├── Linux/                 # Linux dataset
-│   └── generate_synthetic_dataset.py  # Synthetic data generator
-├── GABoost                    # Source code of [GABoost](https://github.com/oceaneLIU/GABoost/)
-├── src/                       # Source code of our proposed FGWAlign
-│   ├── baselines.py           # Assignment and search-based GED baselines
-│   ├── FGWAlign.py            # Core FGWAlign implementation
-│   ├── test_multirel.py       # GED computation experiments on multi-relational graphs
-│   ├── test_real.py           # GED computation experiments on real-world graphs  
-│   └── test_synthetic.py      # GED computation experiments on synthetic graphs
-├── anomaly_detection.py       # Graph-level anomaly detection experiments following [SIGNET](https://github.com/yixinliu233/signet)
-├── test_align_batch.py        # Batch alignment for megadiff_changes
-├── test_align.py              # Other alignment experiments
-├── tutorial.ipynb             # Getting started tutorial
-└── utils.py                   # 
+├── dataset/                      # Datasets
+│   ├── AIDS/                     # AIDS and AIDS700 datasets
+│   ├── IMDB/                     # IMDB dataset 
+│   ├── Linux/                    # Linux dataset
+│   └── generate_synthetic_dataset.py  # Script for generating synthetic datasets
+├── GABoost                       # Source code for [GABoost](https://github.com/oceaneLIU/GABoost/)
+├── src/                          # Source code for FGWAlign
+│   ├── baselines.py              # Assignment and search-based GED baselines
+│   ├── FGWAlign.py               # Core FGWAlign implementation
+│   ├── test_multirel.py          # GED experiments on multi-relational graphs
+│   ├── test_real.py              # GED experiments on real-world graphs  
+│   └── test_synthetic.py         # GED experiments on synthetic graphs
+├── anomaly_detection.py          # Graph-level anomaly detection experiments
+├── test_align_batch.py           # Batched graph alignment for megadiff_changes
+├── test_align.py                 # Additional alignment experiments
+├── tutorial.ipynb                # Getting started tutorial
+└── utils.py                      # Utility functions for graph alignment
 ```
 
 ## Setup
